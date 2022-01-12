@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ignite_flutter_todo_list/home_controller.dart';
 
 import 'screens/done_screen.dart';
 import 'screens/task_screen.dart';
@@ -10,8 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _toDoItemList = <ToDoItem>[];
-  final _doneItemList = <ToDoItem>[];
+  final controller = HomeController();
 
   final _pageViewController = PageController(
     initialPage: 0,
@@ -19,53 +19,6 @@ class _HomePageState extends State<HomePage> {
   );
 
   var _selectedIndex = 0;
-
-  void onAddItem(String itemTitle) {
-    setState(() {
-      _toDoItemList.add(
-        ToDoItem(
-          title: itemTitle,
-        ),
-      );
-    });
-  }
-
-  void onResetItem(ToDoItem item) {
-    setState(() {
-      _doneItemList.remove(item);
-
-      _toDoItemList.add(
-        ToDoItem(
-          title: item.title,
-        ),
-      );
-    });
-  }
-
-  void onRemoveToDoItem(ToDoItem item) {
-    setState(() {
-      _toDoItemList.remove(item);
-    });
-  }
-
-  void onRemoveDoneItem(ToDoItem item) {
-    setState(() {
-      _doneItemList.remove(item);
-    });
-  }
-
-  void onCompleteItem(ToDoItem item) {
-    setState(() {
-      _toDoItemList.remove(item);
-
-      _doneItemList.add(
-        ToDoItem(
-          title: item.title,
-          isDone: true,
-        ),
-      );
-    });
-  }
 
   @override
   void dispose() {
@@ -81,15 +34,10 @@ class _HomePageState extends State<HomePage> {
         controller: _pageViewController,
         children: <Widget>[
           TaskScreen(
-            itemList: _toDoItemList,
-            onAddItem: onAddItem,
-            onCompleteItem: onCompleteItem,
-            onRemoveItem: onRemoveToDoItem,
+            controller: controller,
           ),
           DoneScreen(
-            itemList: _doneItemList,
-            onRemoveItem: onRemoveDoneItem,
-            onResetItem: onResetItem,
+            controller: controller,
           ),
         ],
         onPageChanged: (index) {
